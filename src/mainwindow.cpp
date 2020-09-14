@@ -763,9 +763,9 @@ void MainWindow::finishLoading(bool ok)
 
         view->page()->mainFrame()->evaluateJavaScript("console.log('Test console log catchup by Qwk');");
 
-        // 3. Focus window and click into it to stimulate event loop after signal handling
-        putWindowUp();
     }
+    // 3. Focus window and click into it to stimulate event loop after signal handling
+    putWindowUp();
 }
 
 /**
@@ -961,8 +961,9 @@ void MainWindow::putWindowUp()
 {
     qDebug("Try to activate window...");
 
-    QApplication::setActiveWindow(this);
-    this->focusWidget();
+    view->show();
+    view->activateWindow();
+    view->raise();
 
 #ifdef USE_TESTLIB
     qDebug("... by click simulation...");
