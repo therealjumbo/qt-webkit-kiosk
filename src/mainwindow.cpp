@@ -91,7 +91,7 @@ void MainWindow::init(AnyOption *opts)
     cmdopts = opts;
 
     if (cmdopts->getValue("config") || cmdopts->getValue('c')) {
-        qDebug(">> Config option in command prompt...");
+        qWarning(">> Config option in command prompt...");
         QString cfgPath = cmdopts->getValue('c');
         if (cfgPath.isEmpty()) {
             cfgPath = cmdopts->getValue("config");
@@ -121,13 +121,13 @@ void MainWindow::init(AnyOption *opts)
 
     hiddenCurdor = new QCursor(Qt::BlankCursor);
 
-    qDebug() << "Application icon: " << qwkSettings->getQString("application/icon");
+    qWarning() << "Application icon: " << qwkSettings->getQString("application/icon");
     setWindowIcon(QIcon(
        qwkSettings->getQString("application/icon")
     ));
 
     if (cmdopts->getValue("uri") || cmdopts->getValue('u')) {
-        qDebug(">> Uri option in command prompt...");
+        qWarning(">> Uri option in command prompt...");
         QString uri = cmdopts->getValue('u');
         if (uri.isEmpty()) {
             uri = cmdopts->getValue("uri");
@@ -414,7 +414,7 @@ void MainWindow::clearCacheOnExit()
 
 void MainWindow::cleanupSlot()
 {
-    qDebug("Cleanup Slot (application exit)");
+    qWarning("Cleanup Slot (application exit)");
     handler->stop();
     clearCacheOnExit();
     QWebSettings::clearMemoryCaches();
@@ -429,7 +429,7 @@ void MainWindow::centerFixedSizeWindow()
     quint16 screenWidth = QApplication::desktop()->screenGeometry().width();
     quint16 screenHeight = QApplication::desktop()->screenGeometry().height();
 
-    qDebug() << "Screen size: " << screenWidth << "x" << screenHeight;
+    qWarning() << "Screen size: " << screenWidth << "x" << screenHeight;
 
     quint16 x = 0;
     quint16 y = 0;
@@ -442,7 +442,7 @@ void MainWindow::centerFixedSizeWindow()
         y = qwkSettings->getUInt("view/fixed-y");
     }
 
-    qDebug() << "Move window to: (" << x << ";" << y << ")";
+    qWarning() << "Move window to: (" << x << ";" << y << ")";
 
     move ( x, y );
     setFixedSize( widowWidth, widowHeight );
@@ -526,17 +526,17 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::handleQwkNetworkError(QNetworkReply::NetworkError error, QString message)
 {
-    qDebug() << QDateTime::currentDateTime().toString()
+    qWarning() << QDateTime::currentDateTime().toString()
              << "MainWindow::handleQwkNetworkError"
                 ;
     if (message.contains("Host ") && message.contains(" not found")) {
         // Don't give a damn
-        qDebug() << "Don't give a damn";
+        qWarning() << "Don't give a damn";
         return;
     }
 /*    if (message.contains("Error downloading ") && message.contains("server replied: Not Found")) {
         // Don't give a damn
-        qDebug() << "Don't give a damn";
+        qWarning() << "Don't give a damn";
         return;
     }*/
 
@@ -555,7 +555,7 @@ void MainWindow::handleQwkNetworkError(QNetworkReply::NetworkError error, QStrin
 
             if (hasLinkUp && view->page()->networkAccessManager()->networkAccessible() != QNetworkAccessManager::Accessible) {
 
-                qDebug() << QDateTime::currentDateTime().toString()
+                qWarning() << QDateTime::currentDateTime().toString()
                          << "MainWindow::networkStateChanged -"
                          << "Has interfaces Up and network not Accessible? Force Accessible state and NetworkSession restart!"
                             ;
@@ -570,7 +570,7 @@ void MainWindow::handleQwkNetworkError(QNetworkReply::NetworkError error, QStrin
                 qint32 delay_reload = qwkSettings->getInt("browser/network_error_reload_delay", 15000);
 
                 if (delay_reload >= 0) {
-                    qDebug() << QDateTime::currentDateTime().toString()
+                    qWarning() << QDateTime::currentDateTime().toString()
                              << "MainWindow::networkStateChanged -"
                              << "Delay WebView reload by" << delay_reload/1000. << "sec."
                                 ;
@@ -598,7 +598,7 @@ void MainWindow::handleQwkNetworkError(QNetworkReply::NetworkError error, QStrin
 
 void MainWindow::desktopResized(int p)
 {
-    qDebug() << "Desktop resized event: " << p;
+    qWarning() << "Desktop resized event: " << p;
     if (qwkSettings->getBool("view/fullscreen")) {
         showFullScreen();
     } else if (qwkSettings->getBool("view/maximized")) {
@@ -623,7 +623,7 @@ void MainWindow::pageIconLoaded()
  */
 void MainWindow::startLoading()
 {
-    qDebug()  << QDateTime::currentDateTime().toString() << "Start loading...";
+    qWarning()  << QDateTime::currentDateTime().toString() << "Start loading...";
 
     progress = 0;
 
@@ -663,7 +663,7 @@ void MainWindow::setProgress(int p)
     progress = p;
     adjustTitle(view->title());
 
-    qDebug() << QDateTime::currentDateTime().toString() << "Loading progress: " << p;
+    qWarning() << QDateTime::currentDateTime().toString() << "Loading progress: " << p;
 
     if (loadProgress) {
         loadProgress->setValue(p);
@@ -690,7 +690,7 @@ void MainWindow::setProgress(int p)
  */
 void MainWindow::urlChanged(const QUrl &url)
 {
-    qDebug() << QDateTime::currentDateTime().toString() << "URL changes: " << url.toString();
+    qWarning() << QDateTime::currentDateTime().toString() << "URL changes: " << url.toString();
 
     // Where is a real change in webframe! Drop flags.
     isScrollBarsHidden = false;
@@ -714,7 +714,7 @@ void MainWindow::urlChanged(const QUrl &url)
  */
 void MainWindow::finishLoading(bool ok)
 {
-    qDebug() << QDateTime::currentDateTime().toString()
+    qWarning() << QDateTime::currentDateTime().toString()
              << "MainWindow::finishLoading - "
              << "ok =" << (int)ok
                 ;
@@ -774,10 +774,10 @@ void MainWindow::finishLoading(bool ok)
  */
 bool MainWindow::hideScrollbars()
 {
-    qDebug("MainWindow::hideScrollbars");
+    qWarning("MainWindow::hideScrollbars");
 
     if (qwkSettings->getBool("view/hide_scrollbars")) {
-        qDebug("Try to hide scrollbars...");
+        qWarning("Try to hide scrollbars...");
 
         view->page()->mainFrame()->setScrollBarPolicy( Qt::Vertical, Qt::ScrollBarAlwaysOff );
         view->page()->mainFrame()->setScrollBarPolicy( Qt::Horizontal, Qt::ScrollBarAlwaysOff );
@@ -788,10 +788,10 @@ bool MainWindow::hideScrollbars()
 
 bool MainWindow::disableSelection()
 {
-    qDebug("MainWindow::disableSelection");
+    qWarning("MainWindow::disableSelection");
 
     if (qwkSettings->getBool("view/disable_selection")) {
-        qDebug("Try to disable text selection...");
+        qWarning("Try to disable text selection...");
 
         // Then webkit loads page and it's "empty" - empty html DOM loaded...
         // So we wait before real page DOM loaded...
@@ -799,11 +799,11 @@ bool MainWindow::disableSelection()
         if (!bodyElem.isNull() && !bodyElem.toInnerXml().trimmed().isEmpty()) {
             QWebElement headElem = view->page()->mainFrame()->findFirstElement("head");
             if (headElem.isNull() || headElem.toInnerXml().trimmed().isEmpty()) {
-                qDebug("... html head not loaded ... wait...");
+                qWarning("... html head not loaded ... wait...");
                 return false;
             }
 
-            //qDebug() << "... head element content:\n" << headElem.toInnerXml();
+            //qWarning() << "... head element content:\n" << headElem.toInnerXml();
 
             // http://stackoverflow.com/a/5313735
             QString content;
@@ -819,16 +819,16 @@ bool MainWindow::disableSelection()
             // Ugly hack, but it's works...
             if (!headElem.toInnerXml().contains(content)) {
                 headElem.setInnerXml(headElem.toInnerXml() + content);
-                qDebug("... html head loaded ... hack inserted...");
+                qWarning("... html head loaded ... hack inserted...");
             } else {
-                qDebug("... html head loaded ... hack already inserted...");
+                qWarning("... html head loaded ... hack already inserted...");
             }
 
             //headElem = view->page()->mainFrame()->findFirstElement("head");
-            //qDebug() << "... head element content after:\n" << headElem.toInnerXml() ;
+            //qWarning() << "... head element content after:\n" << headElem.toInnerXml() ;
 
         } else {
-            qDebug("... html body not loaded ... wait...");
+            qWarning("... html body not loaded ... wait...");
             return false;
         }
     }
@@ -838,7 +838,7 @@ bool MainWindow::disableSelection()
 
 void MainWindow::attachJavascripts()
 {
-    qDebug("MainWindow::attachJavascripts");
+    qWarning("MainWindow::attachJavascripts");
 
     QStringList scripts = qwkSettings->getQStringList("attach/javascripts");
     if (!scripts.length()) {
@@ -862,20 +862,20 @@ void MainWindow::attachJavascripts()
 
         if (!file_name.trimmed().length()) continue;
 
-        qDebug() << "-- attach " << file_name;
+        qWarning() << "-- attach " << file_name;
 
         countScripts++;
 
         finfo.setFile(file_name);
         if (finfo.isFile()) {
-            qDebug("-- it's local file");
+            qWarning("-- it's local file");
             QFile f(file_name);
             content += "\n<script type=\"text/javascript\">";
             content += QString(f.readAll());
             content += "</script>\n";
             f.close();
         } else {
-            qDebug("-- it's remote file");
+            qWarning("-- it's remote file");
             content += "\n<script type=\"text/javascript\" src=\"";
             content += file_name;
             content += "\"></script>\n";
@@ -884,13 +884,13 @@ void MainWindow::attachJavascripts()
     if (countScripts > 0 && content.trimmed().length() > 0) {
         bodyElem.setInnerXml(bodyElem.toInnerXml() + content);
 
-        qDebug() << "Page loaded, found " << countScripts << " user javascript files...";
+        qWarning() << "Page loaded, found " << countScripts << " user javascript files...";
     }
 }
 
 void MainWindow::attachStyles()
 {
-    qDebug("MainWindow::attachStyles");
+    qWarning("MainWindow::attachStyles");
 
     QStringList styles = qwkSettings->getQStringList("attach/styles");
     if (!styles.length()) {
@@ -914,20 +914,20 @@ void MainWindow::attachStyles()
 
         if (!file_name.trimmed().length()) continue;
 
-        qDebug() << "-- attach " << file_name;
+        qWarning() << "-- attach " << file_name;
         countStyles++;
 
         finfo.setFile(file_name);
 
         if (finfo.isFile()) {
-            qDebug("-- it's local file");
+            qWarning("-- it's local file");
             QFile f(file_name);
             content += "\n<style type=\"text/css\">\n";
             content += QString(f.readAll());
             content += "</style>\n";
             f.close();
         } else {
-            qDebug("-- it's remote file");
+            qWarning("-- it's remote file");
             content += "\n<link type=\"text/css\" rel=\"stylesheet\" href=\"";
             content += file_name;
             content += "\"/>\n";
@@ -937,7 +937,7 @@ void MainWindow::attachStyles()
     if (countStyles > 0 && content.trimmed().length() > 0) {
         headElem.setInnerXml(headElem.toInnerXml() + content);
 
-        qDebug() << "Page loaded, found " << countStyles << " user style files...";
+        qWarning() << "Page loaded, found " << countStyles << " user style files...";
     }
 }
 
@@ -950,7 +950,7 @@ void MainWindow::attachStyles()
 void MainWindow::unixSignalQuit()
 {
     // No cache clean - quick exit
-    qDebug(">> Quit Signal catched. Exiting...");
+    qWarning(">> Quit Signal catched. Exiting...");
     QApplication::exit(0);
 }
 
@@ -959,14 +959,14 @@ void MainWindow::unixSignalQuit()
  */
 void MainWindow::putWindowUp()
 {
-    qDebug("Try to activate window...");
+    qWarning("Try to activate window...");
 
     view->show();
     view->activateWindow();
     view->raise();
 
 #ifdef USE_TESTLIB
-    qDebug("... by click simulation...");
+    qWarning("... by click simulation...");
     simulateClick->clear();
     simulateClick->addMouseClick(Qt::LeftButton, 0, this->pos(), -1);
     simulateClick->simulate(this);
@@ -984,7 +984,7 @@ void MainWindow::putWindowUp()
 void MainWindow::unixSignalHup()
 {
     if (cmdopts->getValue("config") || cmdopts->getValue('c')) {
-        qDebug(">> Config option in command prompt...");
+        qWarning(">> Config option in command prompt...");
         QString cfgPath = cmdopts->getValue('c');
         if (cfgPath.isEmpty()) {
             cfgPath = cmdopts->getValue("config");
@@ -1006,12 +1006,12 @@ void MainWindow::unixSignalHup()
 void MainWindow::unixSignalUsr1()
 {
     if (!qwkSettings->getQString("signals/SIGUSR1").isEmpty()) {
-        qDebug(">> SIGUSR1 >> Load URI from config file...");
+        qWarning(">> SIGUSR1 >> Load URI from config file...");
         view->loadCustomPage(qwkSettings->getQString("signals/SIGUSR1"));
     } else {
-        qDebug(">> SIGUSR1 >> Load config file...");
+        qWarning(">> SIGUSR1 >> Load config file...");
         if (cmdopts->getValue("config") || cmdopts->getValue('c')) {
-            qDebug(">> Config option in command prompt...");
+            qWarning(">> Config option in command prompt...");
             QString cfgPath = cmdopts->getValue('c');
             if (cfgPath.isEmpty()) {
                 cfgPath = cmdopts->getValue("config");
@@ -1035,10 +1035,10 @@ void MainWindow::unixSignalUsr1()
 void MainWindow::unixSignalUsr2()
 {
     if (!qwkSettings->getQString("signals/SIGUSR2").isEmpty()) {
-        qDebug(">> SIGUSR2 >> Load URI from config file...");
+        qWarning(">> SIGUSR2 >> Load URI from config file...");
         view->loadCustomPage(qwkSettings->getQString("signals/SIGUSR2"));
     } else {
-        qDebug(">> SIGUSR2 >> Load homepage URI...");
+        qWarning(">> SIGUSR2 >> Load homepage URI...");
         view->loadHomepage();
     }
 }
@@ -1052,7 +1052,7 @@ void MainWindow::unixSignalUsr2()
  */
 void MainWindow::networkStateChanged(QNetworkSession::State state)
 {
-    qDebug() << QDateTime::currentDateTime().toString()
+    qWarning() << QDateTime::currentDateTime().toString()
              << "MainWindow::networkStateChanged -"
              << state
                 ;
@@ -1087,7 +1087,7 @@ void MainWindow::networkStateChanged(QNetworkSession::State state)
 
         if (hasLoFace && view->page()->networkAccessManager()->networkAccessible() != QNetworkAccessManager::Accessible) {
 
-            qDebug() << QDateTime::currentDateTime().toString()
+            qWarning() << QDateTime::currentDateTime().toString()
                      << "MainWindow::networkStateChanged -"
                      << "Has loopBack interface and network not accessible? Force accessible state!"
                         ;
@@ -1103,7 +1103,7 @@ void MainWindow::networkStateChanged(QNetworkSession::State state)
         qint32 delay_reload = qwkSettings->getInt("browser/network_error_reload_delay", 15000);
 
         if (delay_reload >= 0) {
-            qDebug() << QDateTime::currentDateTime().toString()
+            qWarning() << QDateTime::currentDateTime().toString()
                      << "MainWindow::networkStateChanged -"
                      << "Delay WebView reload by" << delay_reload/1000. << "msec."
                         ;
@@ -1126,7 +1126,7 @@ void MainWindow::networkStateChanged(QNetworkSession::State state)
 
 void MainWindow::handleQwkNetworkReplyUrl(QUrl url)
 {
-    qDebug() << QDateTime::currentDateTime().toString()
+    qWarning() << QDateTime::currentDateTime().toString()
              << "MainWindow::handleQwkNetworkReplyUrl - "
              << "url=" << url.toString()
                 ;
