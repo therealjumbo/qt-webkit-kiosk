@@ -85,6 +85,9 @@ MainWindow::MainWindow() : QMainWindow()
 
 void MainWindow::init(AnyOption *opts)
 {
+    // Needed to enable logging to syslog or journald.
+    qputenv("QT_LOGGING_TO_CONSOLE", QByteArray("0"));
+
     cmdopts = opts;
 
     if (cmdopts->getValue("config") || cmdopts->getValue('c')) {
