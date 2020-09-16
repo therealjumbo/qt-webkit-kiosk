@@ -459,9 +459,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     switch (event->key()) {
     case Qt::Key_Up:
         view->scrollUp();
+        qWarning("MainWindow scrollUp");
         break;
     case Qt::Key_Down:
         view->scrollDown();
+        qWarning("MainWindow scrollDown");
         break;
     case Qt::Key_PageUp:
         view->scrollPageUp();
