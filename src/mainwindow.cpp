@@ -352,6 +352,7 @@ void MainWindow::init(AnyOption *opts)
 
 void MainWindow::delayedWindowResize()
 {
+    qWarning("Setting focus policy, window size");
     this->setFocusPolicy(Qt::StrongFocus);
 
     if (qwkSettings->getBool("view/stay_on_top")) {
