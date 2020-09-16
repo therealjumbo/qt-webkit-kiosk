@@ -522,7 +522,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
         break;
     default:
-        QMainWindow::keyPressEvent(event);
+        view->event(event);
     }
 }
 
